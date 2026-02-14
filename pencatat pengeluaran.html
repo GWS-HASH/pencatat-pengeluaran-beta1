@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelacak Pengeluaran</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 90%; max-width: 600px; margin: auto; }
+        h1 { text-align: center; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px; margin: 5px 0; }
+        button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pelacak Pengeluaran</h1>
+        <input type="text" id="description" placeholder="Deskripsi Pengeluaran">
+        <input type="number" id="amount" placeholder="Jumlah Pengeluaran">
+        <button onclick="addExpense()">Tambah Pengeluaran</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Deskripsi</th>
+                    <th>Jumlah</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="expenseList"></tbody>
+        </table>
+        <h2>Total: <span id="totalAmount">0</span></h2>
+    </div>
+
+    <script>
+        let expenses = [];
+        let total = 0;
+
+        function addExpense() {
+            const description = document.getElementById('description').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+
+            if (description && !isNaN(amount)) {
+                expenses.push({ description, amount });
+                document.getElementById('description').value = '';
+                document.getElementById('amount').value = '';
+                renderExpenses();
+            } else {
+                alert('Silakan masukkan deskripsi dan jumlah yang valid.');
+            }
+        }
+
+        function renderExpenses() {
+            const expenseList = document.getElementById('expenseList');
+            expenseList.innerHTML = '';
+            total = 0;
+
+            expenses.forEach((expense, index) => {
+                total += expense.amount;
+                const row = expenseList.insertRow();
+                row.insertCell(0).innerText = expense.description;
+                row.insertCell(1).innerText = expense.amount.toFixed(2);
+                row.insertCell(2).innerHTML = 
+&lt;button onclick=&quot;removeExpense(<span class="hljs-subst">${index}</span>)&quot;&gt;Hapus&lt;/button&gt;
+;
+            });
+
+            document.getElementById('totalAmount').innerText = total.toFixed(2);
+        }
+
+        function removeExpense(index) {
+            expenses.splice(index, 1);
+            renderExpenses();
+        }
+    </script>
+</body>
+</html>
